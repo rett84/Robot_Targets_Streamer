@@ -115,9 +115,9 @@ while True:
 
 
         if coord[180]==1:
-            for idx, val in coord[0,29]:
+            for i in range(0,29):
                 
-                print(idx,val)
+                print(coord[i])
 
 
     #    receive_data(181, coord , sock1)
