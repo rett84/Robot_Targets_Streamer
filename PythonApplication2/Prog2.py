@@ -115,9 +115,13 @@ while True:
 
 
         if coord[180]==1:
-            for i in range(0,29):
+            for i in range(0,30):
                 
-                print(coord[i])
+                print('x' + coord[i])
+
+            for i in range(31,61):
+
+                print('y' + coord[i])
 
 
     #    receive_data(181, coord , sock1)
