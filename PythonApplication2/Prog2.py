@@ -117,11 +117,12 @@ while True:
         if coord[180]==1:
             for i in range(0,30):
                 
-                print('x' + coord[i])
+                vetor[i].x = coord[i]
+                print(vetor[i].x)
 
             for i in range(31,61):
 
-                print('y' + coord[i])
+                print('y' , coord[i])
 
 
     #    receive_data(181, coord , sock1)
