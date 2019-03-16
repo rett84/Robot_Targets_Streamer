@@ -14,7 +14,7 @@ import pickle
 # Class Definitions
 
 class Vector:
-    def __init__(self, x, y, z, rx, ry, rz):
+    def __init__(self, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0):
         self.x = x
         self.y = y
         self.z = z
@@ -106,23 +106,43 @@ while True:
 
         receive_data(182, coord , sock1)
         print ('Received', repr(coord))
-         #declare vetor class
-        vetor = [Vector(0,0,0,0,0,0)]
 
-        if coord[180]==0:
+
+         #declare vetor class
+        vetor = [Vector()]*30
+
+        print (coord[180])
+
+        if coord[181]==0:
 
             send_values = [2]
 
 
         if coord[180]==1:
             for i in range(0,30):
-                
-                vetor[i].x = coord[i]
+                vetor[i].x = coord[i] 
                 print(vetor[i].x)
 
-            for i in range(31,61):
+            for i in range(31,60):
+                vetor[i].y = coord[i] 
+                print(vetor[i].y)
 
-                print('y' , coord[i])
+            for i in range(61,90):
+                vetor[i].z = coord[i] 
+                print(vetor[i].z)
+
+            for i in range(91,120):
+                vetor[i].rx = coord[i] 
+                print(vetor[i].rx)
+
+            for i in range(121,150):
+                vetor[i].ry = coord[i] 
+                print(vetor[i].ry)
+            
+            for i in range(151,180):
+                vetor[i].rz = coord[i] 
+                print(vetor[i].rz)
+
 
 
     #    receive_data(181, coord , sock1)
