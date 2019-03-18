@@ -10,6 +10,7 @@ import socket
 import sys
 import struct
 import pickle
+import _thread
 
 # Class Definitions
 
@@ -25,25 +26,62 @@ class Vector:
 
 # Function Definitions
 
-def receive_data(size, array, sockp = socket):
+#def receive_data(size, array, sockp = socket):
 
-    buf = size * 4
-    data = sockp.recv(buf)
-    qty_str = str(size) + 'f'
-    data_arr = struct.unpack(qty_str, data)
+#    buf = size * 4
+#    data = sockp.recv(buf)
+#    qty_str = str(size) + 'f'
+#    data_arr = struct.unpack(qty_str, data)
 
-    for i in data_arr:
-        array.append(i)
+#    for i in data_arr:
+#        array.append(i)
 
 
-def send_data(size, array, sockp = socket):
+#def send_data(size, array, sockp = socket):
 
-    data_arr = []
+#    data_arr = []
 
-    for i in array:
-        data_arr.append(i)
-        data = struct.pack('f', i)
-        sockp.sendall(data)
+#    for i in array:
+#        data_arr.append(i)
+#        data = struct.pack('f', i)
+#        sockp.sendall(data)
+
+
+def s_r_data(size_r, array_r, size_s, array_s, sockp = socket):
+
+    while 1:
+    #    data_arr_r = []
+        data_arr_s = []
+
+
+        #receive
+        buf = size_r * 4
+        amount_expected = buf
+    
+ 
+        amount_received = 0
+        while amount_received < amount_expected:
+            data_r = sockp.recv(buf)
+            amount_received += len(data_r)
+
+        qty_str_r = str(size_r) + 'f'
+        data_arr_r = struct.unpack(qty_str_r, data_r)
+
+        array_r = data_arr_r
+
+    
+        #for i in data_arr_r:
+        #    array_r.append(i)
+
+        #send
+
+        for j in array_s:
+            data_arr_s.append(j)
+            data_s = struct.pack('f', j)
+            sockp.sendall(data_s)
+
+
+
 
 
 
@@ -91,81 +129,80 @@ pose_i = pose_ref
 # Create a TCP/IP socket
 sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+
 # Connect the socket to the port where the server is listening
 server_address = ('192.168.40.1', 49151)
 print('connecting to {} port {}'.format(*server_address))
 
 sock1.connect(server_address)
 
-while True:
+#declare vetor class
+vetor = Vector()
+
+to_plc = [0]*7
+from_plc = [0]*182
+index = 0
+
+
+while 1:
 
     try:
 
-        coord = []
-        send_values = []
+        _thread.start_new_thread(s_r_data,(182, from_plc, 7, to_plc ,sock1))
 
-        receive_data(182, coord , sock1)
-        print ('Received', repr(coord))
+    #    print ('Received', repr(from_plc))
 
+    #    if from_plc[180]==0:
 
-         #declare vetor class
-        vetor = [Vector()]*30
-
-        print (coord[180])
-
-        if coord[181]==0:
-
-            send_values = [2]
+    #        to_plc[0] = 2
 
 
-        if coord[180]==1:
-            for i in range(0,30):
-                vetor[i].x = coord[i] 
-                print(vetor[i].x)
+    #    if from_plc[180]==1:
 
-            for i in range(31,60):
-                vetor[i].y = coord[i] 
-                print(vetor[i].y)
 
-            for i in range(61,90):
-                vetor[i].z = coord[i] 
-                print(vetor[i].z)
+    #        for i in range(0,30):
+    #            vetor.x = from_plc[i] 
+    #        #     print(vetor.x)
 
-            for i in range(91,120):
-                vetor[i].rx = coord[i] 
-                print(vetor[i].rx)
+    #            vetor.y = from_plc[i+29] 
+    #        #      print(vetor.y)
 
-            for i in range(121,150):
-                vetor[i].ry = coord[i] 
-                print(vetor[i].ry)
+
+    #            vetor.z = from_plc[i+59] 
+    #        #      print(vetor.z)
+
+
+    #            vetor.rx = from_plc[i+89] 
+    #        #      print(vetor.rx)
+
+ 
+    #            vetor.ry = from_plc[i+119] 
+    #    #        print(vetor.ry)
             
-            for i in range(151,180):
-                vetor[i].rz = coord[i] 
-                print(vetor[i].rz)
+    #            vetor.rz = from_plc[i+149] 
+    #        #       print(vetor.rz)
 
 
+    #            pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z).RelTool(0,0,0,vetor.rx,vetor.ry, vetor.rz)
+    #            robot.MoveL(pose_n1)
 
-    #    receive_data(181, coord , sock1)
-        send_data(7, send_values, sock1)
+    #        index = index + 1
+    #        to_plc[0] = 1
+            
         
 
-
-    finally:
-       print('closing socket')
-    #    sock1.close()
-    
+    ##    finally:
+    #    #print('closing socket')
+    ##    sock1.close()
+    except:
+        print ("Error: unable to start thread")
  
 
 
-
-
-    #pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z).RelTool(0,0,0,vetor.rx,vetor.ry, vetor.rz)
-
-
-    #robot.MoveL(pose_n1)
+    
 
 
 
 
-    # Done, stop program execution
-    #quit()
+    #    # Done, stop program execution
+    #    #quit()
