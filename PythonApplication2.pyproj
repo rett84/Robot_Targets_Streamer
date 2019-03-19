@@ -27,6 +27,13 @@
     <InterpreterReference Include="Global|PythonCore|3.4" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="class1.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="module1.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Prog2 - Copy.py" />
     <Compile Include="Prog2.py" />
     <Compile Include="robodk.py" />
     <Compile Include="robolink.py" />
