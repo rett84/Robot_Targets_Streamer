@@ -5,7 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e26efd1d-55f7-42d2-a6d5-9e9cadd4b21a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>prog2.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

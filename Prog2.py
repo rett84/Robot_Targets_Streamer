@@ -62,22 +62,19 @@ class ThreadedClient(threading.Thread):
 
 class ThreadedMoveRobot(threading.Thread):
 
-    def __init__(self, robot_pose_0):
+    def __init__(self):
         threading.Thread.__init__(self)
 
         #declare instance variables       
         #self.in_data_0 = in_data_0
         #self.out_data_0 = out_data_0
-        self.robot_pose_0 = robot_pose_0
+        #self.robot_pose_0 = robot_pose_0
        
 
     def run(self):
 
-        
-
         while 1:
-
-            move_robot(self.robot_pose_0)
+            move_robot()
 
 
 
@@ -107,13 +104,15 @@ def send_data(sockp = socket):
 
 
 
-def move_robot(robot_pose_1):
+def move_robot():
 
         global to_plc
         global from_plc
+        global pose_i
 
         # Declare vetor class
         vetor = Vector()
+      
         print ('Received', repr(from_plc))
 
         if from_plc[180]==0:
@@ -131,14 +130,16 @@ def move_robot(robot_pose_1):
                 vetor.ry = from_plc[i+119]           
                 vetor.rz = from_plc[i+149] 
 
-                pose_n1 = robot_pose_1.Offset(vetor.x,vetor.y, vetor.z)
+                pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z)
                 robot.MoveL(pose_n1)
 
             to_plc[0] = 1
             
         
+# End of Definitions
 
-# Initialize the RoboDK API
+
+ # Initialize the RoboDK API
 RDK = Robolink()
 
 
@@ -172,18 +173,18 @@ pose_ref = robot.Pose()
 
 print(Pose_2_TxyzRxyz(pose_ref))
 
-pose_i = pose_ref
 
 
 # Declare variables
 to_plc = [0]*7
 from_plc = [0]*182
+pose_i = pose_ref
 
 
 
 # Create new threads
 thread1 = ThreadedClient('192.168.40.1', 49151)
-thread2 = ThreadedMoveRobot(pose_i)
+thread2 = ThreadedMoveRobot()
 
 
 
