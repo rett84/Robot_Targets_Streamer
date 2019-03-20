@@ -20,6 +20,7 @@ lock = Lock()
 to_plc = [0]*7
 from_plc = [0]*182
 index = 0
+coord = [0]*182
 
 
 # Class Definitions
@@ -57,7 +58,7 @@ class ThreadedClient(threading.Thread):
 
     def run(self):
 
-        while 1:
+        while True:
             receive_data(self.size_r, self.array_r, self.sock1)
             send_data(self.size_s, self.array_s, self.sock1)
 
@@ -65,7 +66,7 @@ class ThreadedClient(threading.Thread):
 
 class ThreadedMoveRobot(threading.Thread):
 
-    def __init__(self, in_data_0, out_data_0, vetor_0, robot_pose_0):
+    def __init__(self, in_data_0, out_data_0, vetor_0, robot_pose_0=0):
         threading.Thread.__init__(self)
 
         #declare instance variables       
@@ -77,7 +78,7 @@ class ThreadedMoveRobot(threading.Thread):
 
     def run(self):
 
-        while 1:
+        while True:
             move_robot(self.in_data_0, self.out_data_0, self.vetor_0, self.robot_pose_0)
 
 
@@ -86,39 +87,39 @@ class ThreadedMoveRobot(threading.Thread):
 
 def receive_data(size, array, sockp = socket):
 
-
        
+
         buf = size * 4
         data = sockp.recv(buf)
         qty_str = str(size) + 'f'
         array = struct.unpack(qty_str, data)
-        
-        print ('Received', repr(array))
-
+        coord = array
+        print ('Received', repr(coord))
+ 
 
 def send_data(size, array, sockp = socket):
 
 
 
-    data_arr = []*size
+        data_arr = []*size
 
-    for i in array:
-        data_arr.append(i)
-        data = struct.pack('f', i)
-        sockp.sendall(data)
+        for i in array:
+            data_arr.append(i)
+            data = struct.pack('f', i)
+            sockp.sendall(data)
 
 
 
 def move_robot(in_data_1, out_data_1, vetor_1, robot_pose_1):
 
 
+        if coord[180]==0:
 
-        if in_data_1[180]==0:
-
+    
             out_data_1[0] = 2
+   
 
-
-        elif from_plc[180]==1:
+        elif coord[180]==1:
 
 
             for i in range(0,30):
@@ -148,72 +149,49 @@ def move_robot(in_data_1, out_data_1, vetor_1, robot_pose_1):
             #    robot.MoveL(pose_n1)
 
             index = index + 1
-            out_data_1[0] = 1
-            
-        
-
-#    ##    finally:
-#    #    #print('closing socket')
-#    ##    sock1.close()
-#    except:
-#        print ("Error: unable to start thread")
  
+            out_data_1[0] = 1
+
+            
 
 
-    
+## Initialize the RoboDK API
+#RDK = Robolink()
 
 
-
-
-#    #    # Done, stop program execution
-#    #    #quit()
-
-
-
-
-
+## turn off auto rendering (faster)
+#RDK.Render(False) 
 
 
 
-
-
-# Initialize the RoboDK API
-RDK = Robolink()
-
-
-# turn off auto rendering (faster)
-RDK.Render(False) 
-
-
-
-# Promt the user to select a robot (if only one robot is available it will select that robot automatically)
-robot = RDK.ItemUserPick('Select a robot', ITEM_TYPE_ROBOT)
+## Promt the user to select a robot (if only one robot is available it will select that robot automatically)
+#robot = RDK.ItemUserPick('Select a robot', ITEM_TYPE_ROBOT)
 
 
 
 
-# Turn rendering ON before starting the simulation
-RDK.Render(True) 
+## Turn rendering ON before starting the simulation
+#RDK.Render(True) 
 
 
-# Abort if the user hits Cancel
-if not robot.Valid():
-    quit()
+## Abort if the user hits Cancel
+#if not robot.Valid():
+#    quit()
 
-# Retrieve the robot reference frame
-reference = robot.Parent()
+## Retrieve the robot reference frame
+#reference = robot.Parent()
 
-# Use the robot base frame as the active reference
-robot.setPoseFrame(reference)
+## Use the robot base frame as the active reference
+#robot.setPoseFrame(reference)
 
-# get the current orientation of the robot (with respect to the active reference frame and tool frame)
-pose_ref = robot.Pose()
+## get the current orientation of the robot (with respect to the active reference frame and tool frame)
+#pose_ref = robot.Pose()
 
-#pos_ref = pose_ref.Pos()
+##pos_ref = pose_ref.Pos()
 
-print(Pose_2_TxyzRxyz(pose_ref))
+#print(Pose_2_TxyzRxyz(pose_ref))
 
-pose_i = pose_ref
+#pose_i = pose_ref
 
 
 
@@ -228,7 +206,7 @@ vetor = Vector()
 # Create new threads
 
 thread1 = ThreadedClient('192.168.40.1', 49151, 182, from_plc, 7, to_plc)
-thread2 = ThreadedMoveRobot(from_plc, to_plc, vetor, pose_i)
+thread2 = ThreadedMoveRobot(from_plc, to_plc, vetor)
 
 
 
@@ -236,53 +214,6 @@ thread2 = ThreadedMoveRobot(from_plc, to_plc, vetor, pose_i)
 thread1.start()
 thread2.start()
 
-
-
-#while 1:
-
-#    try:
-
-
-
-#    #    print ('Received', repr(from_plc))
-
-#    #    if from_plc[180]==0:
-
-#    #        to_plc[0] = 2
-
-
-#    #    if from_plc[180]==1:
-
-
-#    #        for i in range(0,30):
-#    #            vetor.x = from_plc[i] 
-#    #        #     print(vetor.x)
-
-#    #            vetor.y = from_plc[i+29] 
-#    #        #      print(vetor.y)
-
-
-#    #            vetor.z = from_plc[i+59] 
-#    #        #      print(vetor.z)
-
-
-#    #            vetor.rx = from_plc[i+89] 
-#    #        #      print(vetor.rx)
-
- 
-#    #            vetor.ry = from_plc[i+119] 
-#    #    #        print(vetor.ry)
-            
-#    #            vetor.rz = from_plc[i+149] 
-#    #        #       print(vetor.rz)
-
-
-#    #            pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z).RelTool(0,0,0,vetor.rx,vetor.ry, vetor.rz)
-#    #            robot.MoveL(pose_n1)
-
-#    #        index = index + 1
-#    #        to_plc[0] = 1
-            
         
 
 #    ##    finally:
