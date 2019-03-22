@@ -109,9 +109,9 @@ def move_robot():
         global to_plc
         global from_plc
         global pose_i
+        global vetor
 
-        # Declare vetor class
-        vetor = Vector()
+        
       
         print ('Received', repr(from_plc))
 
@@ -179,7 +179,7 @@ print(Pose_2_TxyzRxyz(pose_ref))
 to_plc = [0]*7
 from_plc = [0]*182
 pose_i = pose_ref
-
+vetor = Vector()
 
 
 # Create new threads
