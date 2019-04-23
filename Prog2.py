@@ -131,7 +131,9 @@ def move_robot():
                 vetor.rz = from_plc[i+149] 
 
                 pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z)
-                robot.MoveL(pose_n1)
+
+                if vetor.x != 0 and vetor.y != 0 and vetor.z != 0:
+                    robot.MoveL(pose_n1)
 
             to_plc[0] = 1
             
