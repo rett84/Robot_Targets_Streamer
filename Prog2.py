@@ -106,36 +106,45 @@ def send_data(sockp = socket):
 
 def move_robot():
 
-        global to_plc
-        global from_plc
+        #global to_plc
+        #global from_plc
         global pose_i
         global vetor
+        global index_exec
 
         
       
-        print ('Received', repr(from_plc))
+       # print ('Received', repr(from_plc))
 
-        if from_plc[180]==0:
+        #if from_plc[180]==0:
 
-            to_plc[0] = 2
+        #    to_plc[0] = 2
 
-        elif from_plc[180]==1:
-
+        #elif from_plc[180]==1:
+            
+        if from_plc[181] == (index_exec+1):
 
             for i in range(0,30):
                 vetor.x = from_plc[i] 
-                vetor.y = from_plc[i+29] 
-                vetor.z = from_plc[i+59] 
-                vetor.rx = from_plc[i+89]  
-                vetor.ry = from_plc[i+119]           
-                vetor.rz = from_plc[i+149] 
+                vetor.y = from_plc[i+30] 
+                vetor.z = from_plc[i+60] 
+                vetor.rx = from_plc[i+90]  
+                vetor.ry = from_plc[i+120]           
+                vetor.rz = from_plc[i+150] 
 
-                pose_n1 = pose_i.Offset(vetor.x,vetor.y, vetor.z)
+          #      print (repr(vetor.x), repr(vetor.y), repr(vetor.z))
+                print (repr(from_plc[i]), repr(from_plc[i+30]), repr(from_plc[i+60]))
+               
 
-                if vetor.x != 0 and vetor.y != 0 and vetor.z != 0:
-                    robot.MoveL(pose_n1)
-
-            to_plc[0] = 1
+                pose_n1 = pose_i.Offset(from_plc[i],from_plc[i+30],from_plc[i+60])
+           #     print(Pose_2_TxyzRxyz(robot.Pose()))
+                
+                #if vetor.x != 0 and vetor.y != 0 and vetor.z != 0:
+                robot.MoveL(pose_n1)
+            index_exec = index_exec + 1
+                
+            #to_plc[0] = 1
+            to_plc[1] = index_exec
             
         
 # End of Definitions
@@ -175,14 +184,15 @@ pose_ref = robot.Pose()
 
 print(Pose_2_TxyzRxyz(pose_ref))
 
-
+robot.setZoneData(100) # Set the rounding parameter (Also known as: CNT, APO/C_DIS, ZoneData, Blending radius, cornering, ...)
+robot.setSpeed(1) # Set linear speed in mm/s
 
 # Declare variables
 to_plc = [0]*7
 from_plc = [0]*182
 pose_i = pose_ref
 vetor = Vector()
-
+index_exec = 0
 
 # Create new threads
 thread1 = ThreadedClient('192.168.40.1', 49151)
