@@ -132,7 +132,7 @@ def move_robot():
                 vetor.ry = from_plc[i+120]           
                 vetor.rz = from_plc[i+150] 
 
-          #      print (repr(vetor.x), repr(vetor.y), repr(vetor.z))
+          # #     print (repr(vetor.x), repr(vetor.y), repr(vetor.z))
                 print (repr(from_plc[i]), repr(from_plc[i+30]), repr(from_plc[i+60]))
                
 
