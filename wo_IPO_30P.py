@@ -49,7 +49,7 @@ class ThreadedClient(threading.Thread):
             self.sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock1.connect((self.server_address, self.port))
     #        self.sock1.setblocking(0)
-            self.sock1.settimeout(20)
+            self.sock1.settimeout(180)
             print('connecting to', self.server_address, ' port ', self.port )
 
         except socket.error as socketerror:
@@ -113,54 +113,50 @@ def move_robot():
         #global to_plc
         #global from_plc
         global pose_i
-        global vetor
+ #       global vetor
         global index_exec
-
+        global line_decoded
         
+
+        vetor = []
       
        # print ('Received', repr(from_plc))
 
-        #if from_plc[180]==0:
-
-        #    to_plc[0] = 2
-
-        #elif from_plc[180]==1:
             
         if from_plc[181] == (index_exec+1):
 
             for i in range(0,30):
-                vetor[i].x = from_plc[i] 
-                vetor[i].y = from_plc[i+30] 
-                vetor[i].z = from_plc[i+60] 
-                vetor[i].rx = from_plc[i+90]  
-                vetor[i].ry = from_plc[i+120]           
-                vetor[i].rz = from_plc[i+150] 
+
+                
+                vetor.append(Vector(from_plc[i], from_plc[i+30], from_plc[i+60], from_plc[i+90], from_plc[i+120], from_plc[i+150]))
+              
                 if i ==20:
                     index_exec = index_exec + 1             
                     #to_plc[0] = 1
                     to_plc[1] = index_exec
 
-                #vetor.x = from_plc[0] 
-                #vetor.y = from_plc[30] 
-                #vetor.z = from_plc[60] 
-                #vetor.rx = from_plc[90]  
-                #vetor.ry = from_plc[120]           
-                #vetor.rz = from_plc[150] 
+                 
+            for i in vetor:
 
-            for i in range(0,30):
-
-
-                print (repr(vetor[i].x), repr(vetor[i].y), repr(vetor[i].z))
-             #   print (repr(from_plc[i+0]), repr(from_plc[i+30]), repr(from_plc[i+60]))
+                #line_decoded = line_decoded + 1
+                #to_plc[5] = line_decoded
+                #to_plc[4] = i
+                print (repr(i.x), repr(i.y), repr(i.z))
                
+                pose_n1 = pose_i.Offset(i.x,i.y,i.z)
 
-                pose_n1 = pose_i.Offset(vetor[i].x,vetor[i].y,vetor[i].z)
-           #     print(Pose_2_TxyzRxyz(robot.Pose()))
-                
-                #if vetor.x != 0 and vetor.y != 0 and vetor.z != 0:
                 robot.MoveL(pose_n1)
-               
-            
+                
+              
+
+          
+            #index_exec = index_exec + 1             
+            #to_plc[0] = 1
+            #to_plc[1] = index_exec
+
+
+        if from_plc[181] == 99999999:#move robot to home position
+             robot.MoveJ(pose_ref)
         
 # End of Definitions
 
@@ -192,23 +188,26 @@ reference = robot.Parent()
 # Use the robot base frame as the active reference
 robot.setPoseFrame(reference)
 
+robot.setJoints([0,-20,-115,0,83,0])
+
 # get the current orientation of the robot (with respect to the active reference frame and tool frame)
-pose_ref = robot.Pose()
+pose_ref = robot.Pose() #home position
 
 #pos_ref = pose_ref.Pos()
 
 print(Pose_2_TxyzRxyz(pose_ref))
 
 robot.setZoneData(100) # Set the rounding parameter (Also known as: CNT, APO/C_DIS, ZoneData, Blending radius, cornering, ...)
-robot.setSpeed(100) # Set linear speed in mm/s
+robot.setSpeed(5) # Set linear speed in mm/s
 
 # Declare variables
 to_plc = [0]*7
 from_plc = [0]*182
 pose_i = pose_ref
-vetor = Vector()
-vetor = [0]*30
+#vetor = [Vector()]*30
+
 index_exec = 0
+line_decoded = 0
 
 # Create new threads
 thread1 = ThreadedClient('192.168.40.1', 49151)

@@ -5,15 +5,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e26efd1d-55f7-42d2-a6d5-9e9cadd4b21a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Prog2.py</StartupFile>
+    <StartupFile>wo_IPO_30P.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PythonApplication2</Name>
     <RootNamespace>PythonApplication2</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.4</InterpreterId>
+    <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
     <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.4" />
+    <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\3.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="class1.py">
@@ -34,7 +36,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Prog2 - Copy.py" />
-    <Compile Include="Prog2.py" />
+    <Compile Include="wo_IPO_30P.py" />
     <Compile Include="robodk.py" />
     <Compile Include="robolink.py" />
   </ItemGroup>
