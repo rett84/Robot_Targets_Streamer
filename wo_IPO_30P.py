@@ -116,7 +116,7 @@ def move_robot():
  #       global vetor
         global index_exec
         global line_decoded
-        
+        k = 0
 
         vetor = []
       
@@ -138,15 +138,15 @@ def move_robot():
                  
             for i in vetor:
 
-                #line_decoded = line_decoded + 1
-                #to_plc[5] = line_decoded
-                #to_plc[4] = i
+                line_decoded = line_decoded + 1
+                to_plc[5] = line_decoded
+                to_plc[4] = k
                 print (repr(i.x), repr(i.y), repr(i.z))
                
-                pose_n1 = pose_i.Offset(i.x,i.y,i.z)
+                pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(i.rx, i.ry, i.rz)
 
                 robot.MoveL(pose_n1)
-                
+                k = k+1
               
 
           

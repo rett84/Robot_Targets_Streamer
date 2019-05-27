@@ -12,9 +12,8 @@
     <OutputPath>.</OutputPath>
     <Name>PythonApplication2</Name>
     <RootNamespace>PythonApplication2</RootNamespace>
-    <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
+    <InterpreterId>Global|PythonCore|3.4</InterpreterId>
     <IsWindowsApplication>False</IsWindowsApplication>
-    <InterpreterVersion>3.4</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,7 +25,6 @@
   </PropertyGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.4" />
-    <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\3.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="class1.py">
