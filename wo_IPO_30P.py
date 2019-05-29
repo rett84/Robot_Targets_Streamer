@@ -87,9 +87,9 @@ class ThreadedMoveRobot(threading.Thread):
 def receive_data(sockp = socket):
 
         global from_plc     
-        buf = 182 * 4
+        buf = 183 * 4
         data = sockp.recv(buf)
-        qty_str = str(182) + 'f'
+        qty_str = str(183) + 'f'
         data_arr = struct.unpack(qty_str, data)
         from_plc = data_arr
 
@@ -116,7 +116,10 @@ def move_robot():
  #       global vetor
         global index_exec
         global line_decoded
-        k = 0
+        global r_speed
+        k = 0       
+        r_speed = from_plc[182]
+        robot.setSpeed(r_speed)
 
         vetor = []
       
@@ -141,9 +144,9 @@ def move_robot():
                 line_decoded = line_decoded + 1
                 to_plc[5] = line_decoded
                 to_plc[4] = k
-                print (repr(i.x), repr(i.y), repr(i.z))
+                print (repr(i.x), repr(i.y), repr(i.z), repr(i.rx), repr(i.ry), repr(i.rz))
                
-                pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(i.rx, i.ry, i.rz)
+                pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(0,0,0,i.rx, i.ry, i.rz)
 
                 robot.MoveL(pose_n1)
                 k = k+1
@@ -202,13 +205,13 @@ robot.setSpeed(5) # Set linear speed in mm/s
 
 # Declare variables
 to_plc = [0]*7
-from_plc = [0]*182
+from_plc = [0]*183
 pose_i = pose_ref
 #vetor = [Vector()]*30
 
 index_exec = 0
 line_decoded = 0
-
+r_speed = 0
 # Create new threads
 thread1 = ThreadedClient('192.168.40.1', 49151)
 thread2 = ThreadedMoveRobot()
