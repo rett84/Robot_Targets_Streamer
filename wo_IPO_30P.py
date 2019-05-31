@@ -147,8 +147,26 @@ def move_robot():
                 print (repr(i.x), repr(i.y), repr(i.z), repr(i.rx), repr(i.ry), repr(i.rz))
                
                 pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(0,0,0,i.rx, i.ry, i.rz)
+                #pose_n1 = pose_i.Offset(i.x,i.y,i.z,i.rx, i.ry, i.rz)
+                #pose_n1 = transl(i.x,i.y,i.z)*rotz(i.rz*pi/180)*roty(i.ry*pi/180)*rotx(i.rx*pi/180)  
 
-                robot.MoveL(pose_n1)
+
+                # get the current robot joints
+                #robot_joints = robot.Joints()
+
+                
+            
+                # get the robot position from the joints (calculate forward kinematics)
+                #robot_position = robot.SolveFK(robot_joints)
+
+
+                #new_robot_position = transl([i.x,i.y,i.z])*rotx(i.rx*pi/180)*roty(i.ry*pi/180)*rotz(i.rz*pi/180)*robot_position      
+
+
+                # calculate the new robot joints
+                #pose_n1 = robot.SolveIK(new_robot_position)
+  
+                robot.MoveJ(pose_n1)
                 k = k+1
               
 
@@ -159,7 +177,7 @@ def move_robot():
 
 
         if from_plc[181] == 99999999:#move robot to home position
-             robot.MoveJ(pose_ref)
+             robot.MoveL(pose_ref)
         
 # End of Definitions
 
@@ -191,7 +209,8 @@ reference = robot.Parent()
 # Use the robot base frame as the active reference
 robot.setPoseFrame(reference)
 
-robot.setJoints([0,-20,-115,0,83,0])
+#robot.setJoints([0,-20,-115,0,-90,0])
+robot.setJoints([0,0,0,0,0,180])
 
 # get the current orientation of the robot (with respect to the active reference frame and tool frame)
 pose_ref = robot.Pose() #home position
