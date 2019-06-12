@@ -146,8 +146,10 @@ def move_robot():
                 to_plc[4] = k
                 print (repr(i.x), repr(i.y), repr(i.z), repr(i.rx), repr(i.ry), repr(i.rz))
                
-                pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(0,0,0,i.rx, i.ry, i.rz)
-                #pose_n1 = pose_i.Offset(i.x,i.y,i.z,i.rx, i.ry, i.rz)
+                #pose_n1 = pose_i.Offset(i.x,i.y,i.z).RelTool(0,0,0,i.rx, i.ry, i.rz) #motoman, abb
+                #pose_n1 = TxyzRxyz_2_Pose([i.x, i.y, i.z, ((i.rx*pi)/180), ((i.ry*pi)/180), ((i.rz*pi)/180)])
+                #pose_n2  = Pose_2_KUKA(pose_n1)
+                pose_n1 = pose_i.Offset(i.x,i.y,i.z)*rotz(i.rz*pi/180)*roty(i.ry*pi/180)*rotx(i.rx*pi/180) #kuka
                 #pose_n1 = transl(i.x,i.y,i.z)*rotz(i.rz*pi/180)*roty(i.ry*pi/180)*rotx(i.rx*pi/180)  
 
 
@@ -210,7 +212,7 @@ reference = robot.Parent()
 robot.setPoseFrame(reference)
 
 #robot.setJoints([0,-20,-115,0,-90,0])
-robot.setJoints([0,0,0,0,0,180])
+#robot.setJoints([0,0,0,0,0,180])
 
 # get the current orientation of the robot (with respect to the active reference frame and tool frame)
 pose_ref = robot.Pose() #home position
