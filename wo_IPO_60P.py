@@ -110,7 +110,7 @@ def receive_data(sockp = socket):
         from_plc = data_arr
 
 
-
+#test
 
 def send_data(sockp = socket):
 
